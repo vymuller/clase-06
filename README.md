@@ -1,2 +1,1 @@
-# clase-01
-Primera clase
+# clase-002

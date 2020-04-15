@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        select {
+            position: absolute;
+            right: 1%;
+            top: 2%;
+            z-index: 99999;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+    <title>DNO037</title>
+</head>
+
+<body>
+
+    <select onchange="if (this.value) window.location.href=this.value">
+        <option value="index.html">Portada &rarr; index.html</option>
+        <option value="graph.html" selected>Gráfico &rarr; graph.html</option>
+        <option value="mapa.html">Mundial &rarr; mapa.html</option>
+    </select>
+
+    <script>
+        var url = "https://pomber.github.io/covid19/timeseries.json";
+        var casos, italia, austria, india, francia, portugal;
+        var marzo = [];
+        var marzo_italia = [];
+        var marzo_austria = [];
+        var marzo_india = [];
+        var marzo_francia = [];
+        var marzo_portugal = [];
+
+        function preload() {
+            casos = loadJSON(url);
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight).id("chart");
+
+            for (let x = 1; x <= 31; x++) {
+                marzo.push(x);
+            }
+
+            italia = casos.Italy;
+            austria = casos.Austria;
+            india = casos.India;
+            francia = casos.France;
+            portugal = casos.Portugal;
+
+            for (let x = 0; x < italia.length; x++) {
+                if (italia[x].date.includes("-3-")) {
+                    marzo_italia.push(italia[x].confirmed);
+                }
+            }
+
+            for (let x = 0; x < austria.length; x++) {
+                if (austria[x].date.includes("-3-")) {
+                    marzo_austria.push(austria[x].recovered);
+                }
+            }
+
+            for (let x = 0; x < india.length; x++) {
+                if (india[x].date.includes("-3-")) {
+                    marzo_india.push(india[x].recovered);
+                }
+            }
+
+            for (let x = 0; x < francia.length; x++) {
+                if (francia[x].date.includes("-3-")) {
+                    marzo_francia.push(francia[x].recovered);
+                }
+            }
+
+            for (let x = 0; x < portugal.length; x++) {
+                if (portugal[x].date.includes("-3-")) {
+                    marzo_portugal.push(portugal[x].recovered);
+                }
+            }
+
+            new Chart(document.getElementById('chart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: marzo,
+                    datasets: [{
+                        label: 'Austria',
+                        backgroundColor: 'rgba(255,255,204)',
+                        borderColor: 'rgb(255,255,204)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        lineTension: 0,
+                        data: marzo_austria
+                    }, {
+                        label: 'India',
+                        backgroundColor: 'rgba(194,230,153)',
+                        borderColor: 'rgb(194,230,153)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        lineTension: 0,
+                        data: marzo_india
+                    }, {
+                        label: 'Francia',
+                        backgroundColor: 'rgba(120,198,121)',
+                        borderColor: 'rgb(120,198,121)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        lineTension: 0,
+                        data: marzo_francia
+                    }, {
+                        label: 'Italia',
+                        backgroundColor: 'rgba(49,163,84)',
+                        borderColor: 'rgb(49,163,84)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        lineTension: 0,
+                        data: marzo_italia
+                    }, {
+                        label: 'Portugal',
+                        backgroundColor: 'rgba(0,104,55)',
+                        borderColor: 'rgb(0,104,55)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        lineTension: 0,
+                        data: marzo_portugal
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Casos confirmados de coronavirus durante marzo 2020'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value;
+                                }
+                            }
+                        }]
+                    }
+                }
+            }); //acá se cierra el new Chart de chart.js
+        } //acá se cierra el function setup de p5.js
+    </script>
+</body>
+
+</html>
